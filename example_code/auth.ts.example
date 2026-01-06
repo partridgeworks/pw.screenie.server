@@ -1,0 +1,128 @@
+import { NextRequest, NextResponse } from "next/server";
+import UserModel, { user } from "@/lib/models/User";
+import { getMongoose } from "@/lib/utils/mongo";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { getUserFromAPIKey } from "@/lib/utils/apiKeyAuth";
+import logger from "@/lib/utils/serverLogger";
+
+/**
+ * Result type for tryGetCurrentUserForAPI - a discriminated union
+ * that ensures type-safe handling of success/failure cases
+ */
+export type APIAuthResult = 
+  | { success: true; user: user }
+  | { success: false; response: NextResponse };
+
+// Helper to create a default local user from a Clerk user.  Returns the new user ID
+async function createDefaultUserFromClerk(_clerkUserId: string, _firstName: string | null, _lastName: string | null, _email: string | null): Promise<string> {
+  const first = (_firstName ?? "User").trim() || "User";
+  const last = (_lastName ?? "Account").trim() || "Account";
+  const email = (_email ?? `no-email-${_clerkUserId}@example.local`).toLowerCase();
+
+  // Determine if this is the very first user in the database
+  const existingCount = await UserModel.estimatedDocumentCount().exec();
+  const applicationRole = existingCount === 0 ? "admin" : "user";
+
+  const newUser = await UserModel.create({
+    clerkId: _clerkUserId,
+    firstName: first,
+    lastName: last,
+    email,
+    tier: "basic",
+    applicationRole,
+    communities: []
+  });
+
+  return newUser._id.toString();
+}
+
+/**
+ * Retrieves the current authenticated user via Clerk authentication.
+ * Throws if no authenticated user can be determined.
+ * 
+ * Note: For API routes that need to support API key authentication,
+ * use tryGetCurrentUserForAPI() instead.
+ */
+export async function getCurrentUser(): Promise<user> {
+  await getMongoose();
+
+  // Clerk authentication
+  const { isAuthenticated } = await auth();
+  if (!isAuthenticated) {
+    // This should not occur due to middleware protection
+    throw new Error("Unauthorized: no authenticated Clerk user");
+  }
+
+  const clerk = await currentUser();
+  if (!clerk) {
+    throw new Error("Clerk currentUser() returned null");
+  }
+
+  const clerkId = clerk.id;
+  // Clerk primary email can be in different locations depending on provider
+  const email = clerk.emailAddresses?.find((e) => e.id === clerk.primaryEmailAddressId)?.emailAddress || clerk.emailAddresses?.[0]?.emailAddress || null;
+  const firstName = clerk.firstName ?? null;
+  const lastName = clerk.lastName ?? null;
+
+  // Try to find existing local user by clerkId
+  let someUser = await UserModel.findOne({ clerkId }).lean<user>();
+
+  if (!someUser) {
+    // Create a default user if none exists
+    const newUserID = await createDefaultUserFromClerk(clerkId, firstName, lastName, email);
+    someUser = await UserModel.findOne({ _id: newUserID }).lean<user>();
+  }
+
+  if (!someUser) {
+    throw new Error("Failed to retrieve or create local user for authenticated Clerk user");
+  }
+
+  return someUser;
+}
+
+/**
+ * API-specific authentication wrapper that handles errors gracefully.
+ * Returns a discriminated union: either a success with the user, or a failure with an HTTP response.
+ * 
+ * Authentication priority:
+ * 1. API Key (via X-API-Key header) - returns linked user with API key's role
+ * 2. Clerk session authentication - standard browser-based auth
+ * 
+ * Usage:
+ * ```typescript
+ * const authResult = await tryGetCurrentUserForAPI(req);
+ * if (!authResult.success) {
+ *   return authResult.response;
+ * }
+ * const currentUser = authResult.user;
+ * ```
+ * 
+ * @param req The NextRequest object from the API route
+ * @returns APIAuthResult - either { success: true, user } or { success: false, response }
+ */
+export async function tryGetCurrentUserForAPI(req: NextRequest): Promise<APIAuthResult> {
+  try {
+    await getMongoose();
+
+    // Check for API key authentication first
+    const apiKeyUser = await getUserFromAPIKey(req);
+    if (apiKeyUser) {
+      return { success: true, user: apiKeyUser };
+    }
+
+    // Fall back to Clerk authentication
+    const user = await getCurrentUser();
+    return { success: true, user };
+  } catch (error) {
+    const err = error as Error;
+    logger.warn("[API Auth] Authentication failed", { message: err.message });
+    
+    return {
+      success: false,
+      response: NextResponse.json(
+        { message: "Unauthorized: authentication required" },
+        { status: 401 }
+      )
+    };
+  }
+}

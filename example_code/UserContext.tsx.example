@@ -1,0 +1,83 @@
+"use client";
+
+import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import useSWR from "swr";
+import { fetcher } from "@/app/utils/fetcher";
+import type { user } from "@/lib/models/User";
+import logger from "../utils/clientLogger";
+
+interface UserContextValue {
+  user: user;
+  isLoading: boolean;
+  error: Error | undefined;
+  refresh: () => void;
+  updateUserState: (_patch: Record<string, unknown>) => Promise<void>;
+}
+
+const UserContext = createContext<UserContextValue | undefined>(undefined);
+
+export function UserProvider({ initialUser, children }: { initialUser: user; children: React.ReactNode }) {
+  const { data, error, isLoading, mutate } = useSWR<user>("/api/me", fetcher, {
+    suspense: true,
+    fallbackData: initialUser
+  });
+
+  // Seed the SWR cache with the initial user so `mutate(current => ...)` receives data.
+  useEffect(() => {
+    if (initialUser) {
+      // Do not revalidate here; just populate the cache.
+      void mutate(initialUser, { revalidate: false, populateCache: true });
+    }
+  }, [initialUser, mutate]);
+
+  const refresh = useCallback(() => {
+    void mutate();
+  }, [mutate]);
+
+  const updateUserState = useCallback(
+    async (patch: Record<string, unknown>) => {
+      logger.info("Updating user state with patch:", patch);
+      // optimistic update
+      await mutate(
+        async (current) => {
+          const base = current ?? (data as user | undefined);
+          if (!base) {
+            logger.warn("No current user data available for patching.");
+            return current;
+          }
+          logger.info("Current user before patch:", base);
+          const optimistic: user = { ...base, state: { ...(base.state ?? {}), ...(patch as object) } } as user;
+          try {
+            await fetcher("/api/me/state", { method: "PATCH", body: JSON.stringify({ patch }) });
+            return optimistic;
+          } catch {
+            // revalidate to undo optimistic update on error
+            void mutate();
+            throw new Error("Failed to update user state");
+          }
+        },
+        { revalidate: true, populateCache: true, rollbackOnError: true }
+      );
+    },
+    [mutate, data]
+  );
+
+  const value: UserContextValue = useMemo(
+    () => ({
+      user: data as user,
+      isLoading,
+      error: error as Error | undefined,
+      refresh,
+      updateUserState
+    }),
+    [data, isLoading, error, refresh, updateUserState]
+  );
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+}
+
+export function useUser(): UserContextValue {
+  const ctx = useContext(UserContext);
+  if (!ctx) throw new Error("useUser must be used within a UserProvider");
+  return ctx;
+}

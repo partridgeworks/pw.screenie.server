@@ -1,0 +1,28 @@
+import mongoose, { Schema, InferSchemaType } from "mongoose";
+import { UserStateSchema } from "./UserState";
+import { USER_TIERS } from "@/lib/config/tiers/types";
+
+// Mongoose schema for User
+const UserSchema = new Schema(
+  {
+    clerkId: { type: String, index: true, unique: true, sparse: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true, lowercase: true },
+    applicationRole: { type: String, enum: ["admin", "user"], required: true, default: "user" },
+    state: { type: UserStateSchema, required: false },
+    CreationDate: { type: Date, default: Date.now },
+    LastUpdatedDate: { type: Date, default: Date.now },
+    IsDeleted: { type: Boolean, default: false }
+  },
+  { timestamps: { createdAt: "CreationDate", updatedAt: "LastUpdatedDate" } }
+);
+
+type UserSchemaType = InferSchemaType<typeof UserSchema>;
+// Create and export the User model - be sure to provide a type argument to mongoose.model<> here! 
+const UserModel: mongoose.Model<UserSchemaType> =  mongoose.models.User || mongoose.model("User", UserSchema);
+
+// Inferred type for frontend usage
+export type user = Omit<UserSchemaType, "_id"> & { _id: string };
+
+export default UserModel;
