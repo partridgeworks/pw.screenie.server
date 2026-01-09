@@ -57,6 +57,15 @@ export default function MobileNavDrawer() {
                                 </li>
                                 <li>
                                     <Link
+                                        href="/get-device"
+                                        className="btn btn-primary btn-ghost justify-start"
+                                        onClick={closeDrawer}
+                                    >
+                                        Get a Screenie
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
                                         href="/developers"
                                         className="btn btn-primary btn-ghost justify-start"
                                         onClick={closeDrawer}
@@ -90,6 +99,15 @@ export default function MobileNavDrawer() {
                                         onClick={closeDrawer}
                                     >
                                         Settings
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="/get-device"
+                                        className="btn btn-primary btn-ghost justify-start"
+                                        onClick={closeDrawer}
+                                    >
+                                        Get a Screenie
                                     </Link>
                                 </li>
                                 <li>

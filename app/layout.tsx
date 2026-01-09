@@ -55,6 +55,7 @@ export default function RootLayout({
             <div className="navlinks ml-auto hidden md:flex flex-row gap-2">
               <SignedOut>
                 <Link href="/about" className="btn btn-md btn-primary-content btn-ghost font-medium">About</Link>
+                <Link href="/get-device" className="btn btn-md btn-primary-content btn-ghost font-medium">Get a Screenie</Link>
                 <Link href="/developers" className="btn btn-md btn-primary-content btn-ghost font-medium">Developers</Link>
                 <SignInButton />
                 <SignUpButton>
@@ -65,6 +66,8 @@ export default function RootLayout({
               </SignedOut>
               <SignedIn>
                 <div className="ml-auto flex flex-row gap-2" >
+                  <Link href="/about" className="btn btn-md btn-primary-content btn-ghost font-medium">About</Link>
+                  <Link href="/get-device" className="btn btn-md btn-primary-content btn-ghost font-medium">Get a Screenie</Link>
                   <Link href="/developers" className="btn btn-md btn-primary-content btn-ghost font-medium">Developers</Link>
                   <Link href="/home/" className="btn btn-md btn-primary-content btn-ghost font-medium">Dashboard</Link>
                   <CustomUserButton />
