@@ -1,16 +1,26 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@layer base {
+  :root,
+  [data-theme="light"] {
+    --color-primary: oklch(50.67% 0.213 357.14);
+    --color-primary-content: oklch(100% 0 0);
+    --color-secondary: oklch(83.102% 0.17 86.285);
+    --color-secondary-content: oklch(100% 0 0);
+  }
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --primary: #CD0B6F;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
   --font-sans: var(--font-montserrat-sans);
 }
 
