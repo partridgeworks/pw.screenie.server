@@ -36,8 +36,12 @@ Let us know what you have built and we'd be happy to feature it on the site.`,
 
 export default function FAQSection() {
   return (
-    <section className="py-20 px-6 bg-base-200">
-      <div className="max-w-3xl mx-auto">
+    <section className="relative">
+      {/* Full-width background layer */}
+      <div className="absolute inset-0 bg-base-200 w-screen left-1/2 -ml-[50vw]" />
+      
+      {/* Contained content */}
+      <div className="relative py-20 px-6 max-w-3xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           Common Questions
         </h2>

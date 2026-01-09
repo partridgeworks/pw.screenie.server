@@ -77,7 +77,11 @@ export default function RootLayout({
             <MobileNavDrawer />
           </header>
 
-          {children}
+          {/* MAIN WRAPPER CONTAINER - MAXES OUT AT 1200PX WIDTH */}
+          <div className="max-w-5xl mx-auto w-full">
+
+            {children}
+          </div>
         </body>
       </html>
     </ClerkProvider>
