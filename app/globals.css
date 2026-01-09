@@ -36,3 +36,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Utility class for monospaced/tabular numerals with Montserrat font */
+.font-montserrat-tabular {
+  font-family: var(--font-montserrat);
+  font-feature-settings: 'tnum';
+}

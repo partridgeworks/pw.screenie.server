@@ -81,12 +81,12 @@ export default function BonusTimeDialog({
     minBonus = Math.max(-180, -currentTotalMinutes);
   }
 
-  const handleIncrement = () => {
-    setBonusMinutes((prev) => Math.min(maxBonus, prev + 15));
+  const handleIncrement = (amount: number) => {
+    setBonusMinutes((prev) => Math.min(maxBonus, prev + amount));
   };
 
-  const handleDecrement = () => {
-    setBonusMinutes((prev) => Math.max(minBonus, prev - 15));
+  const handleDecrement = (amount: number) => {
+    setBonusMinutes((prev) => Math.max(minBonus, prev - amount));
   };
 
   const newTotal = currentTotalMinutes !== null 
@@ -120,28 +120,48 @@ export default function BonusTimeDialog({
           </div>
 
           {/* Bonus time selector */}
-          <div className="flex items-center justify-center gap-4 py-4">
+          <div className="flex items-center justify-center gap-2 py-4">
+            {/* Large -15 button */}
             <button
-              className="btn btn-circle btn-lg"
-              onClick={handleDecrement}
+              className="btn btn-circle btn-lg flex items-center justify-center"
+              onClick={() => handleDecrement(15)}
               disabled={bonusMinutes <= minBonus || isSubmitting}
             >
-              −
+              −15
+            </button>
+            
+            {/* Small -1 button */}
+            <button
+              className="btn btn-circle btn-sm flex items-center justify-center"
+              onClick={() => handleDecrement(1)}
+              disabled={bonusMinutes <= minBonus || isSubmitting}
+            >
+              −1
             </button>
             
             <div className="text-center min-w-24">
-              <div className={`text-3xl font-bold ${bonusMinutes > 0 ? "text-success" : bonusMinutes < 0 ? "text-error" : ""}`}>
+              <div className={`text-3xl font-bold font-montserrat-tabular ${bonusMinutes > 0 ? "text-success" : bonusMinutes < 0 ? "text-error" : ""}`}>
                 {formatMinutesToHHMM(bonusMinutes)}
               </div>
               <div className="text-sm text-base-content/70">to add</div>
             </div>
 
+            {/* Small +1 button */}
             <button
-              className="btn btn-circle btn-lg"
-              onClick={handleIncrement}
+              className="btn btn-circle btn-sm flex items-center justify-center"
+              onClick={() => handleIncrement(1)}
               disabled={bonusMinutes >= maxBonus || isSubmitting}
             >
-              +
+              +1
+            </button>
+
+            {/* Large +15 button */}
+            <button
+              className="btn btn-circle btn-lg flex items-center justify-center"
+              onClick={() => handleIncrement(15)}
+              disabled={bonusMinutes >= maxBonus || isSubmitting}
+            >
+              +15
             </button>
           </div>
 
