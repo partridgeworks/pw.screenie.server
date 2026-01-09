@@ -54,6 +54,8 @@ export default function RootLayout({
             </div>
             <div className="navlinks ml-auto hidden md:flex flex-row gap-2">
               <SignedOut>
+                <Link href="/about" className="btn btn-md btn-primary-content btn-ghost font-medium">About</Link>
+                <Link href="/developers" className="btn btn-md btn-primary-content btn-ghost font-medium">Developers</Link>
                 <SignInButton />
                 <SignUpButton>
                   <button className="btn btn-outline">

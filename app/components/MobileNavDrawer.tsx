@@ -47,6 +47,24 @@ export default function MobileNavDrawer() {
                         <ul className="flex-1 space-y-2">
                             <SignedOut>
                                 <li>
+                                    <Link
+                                        href="/about"
+                                        className="btn btn-primary btn-ghost justify-start"
+                                        onClick={closeDrawer}
+                                    >
+                                        About
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="/developers"
+                                        className="btn btn-primary btn-ghost justify-start"
+                                        onClick={closeDrawer}
+                                    >
+                                        Developers
+                                    </Link>
+                                </li>
+                                <li>
                                     <SignInButton />
                                 </li>
                                 <li>
