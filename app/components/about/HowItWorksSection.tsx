@@ -10,13 +10,13 @@ export default function HowItWorksSection() {
         <p className="text-center text-base-content/70 max-w-2xl mx-auto mb-16">
           A simple agreement: when the screen is on, the timer runs. When time&apos;s up, they come away.
         </p>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           {/* Step 1 */}
           <div className="card bg-base-100 shadow-lg">
             <div className="card-body items-center text-center">
-              <div className="bg-primary/10 rounded-full p-6 mb-4">
-                <span className="text-5xl">1️⃣</span>
+              <div className="bg-secondary text-secondary-content rounded-full p-6 mb-4 aspect-square w-16 h-16 items-center justify-center flex">
+                <span className="text-4xl">1</span>
               </div>
               <h3 className="card-title">Set Allowances</h3>
               <p className="text-base-content/70">
@@ -28,8 +28,8 @@ export default function HowItWorksSection() {
           {/* Step 2 */}
           <div className="card bg-base-100 shadow-lg">
             <div className="card-body items-center text-center">
-              <div className="bg-primary/10 rounded-full p-6 mb-4">
-                <span className="text-5xl">2️⃣</span>
+              <div className="bg-secondary text-secondary-content rounded-full p-6 mb-4 aspect-square w-16 h-16 items-center justify-center flex">
+                <span className="text-4xl">2</span>
               </div>
               <h3 className="card-title">Kids Time Themselves</h3>
               <p className="text-base-content/70">
@@ -41,8 +41,8 @@ export default function HowItWorksSection() {
           {/* Step 3 */}
           <div className="card bg-base-100 shadow-lg">
             <div className="card-body items-center text-center">
-              <div className="bg-primary/10 rounded-full p-6 mb-4">
-                <span className="text-5xl">3️⃣</span>
+              <div className="bg-secondary text-secondary-content rounded-full p-6 mb-4 aspect-square w-16 h-16 items-center justify-center flex">
+                <span className="text-4xl">3</span>
               </div>
               <h3 className="card-title">Stay Connected</h3>
               <p className="text-base-content/70">

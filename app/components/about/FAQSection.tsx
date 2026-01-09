@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 const faqs = [
   {
-    question: "How do a get a Screenie device?",
+    question: "How can I get a Screenie device?",
     answer: `At the moment, the only way to get a Screenie is to buy an m5stick2 device and then copy the screenie firmware onto it. Full instructions are on the Screenie device blog [here](https://partridge.works/screenie-project-part-4-its-alive/).
 
 We are considering making a small batch of pre-flashed devices available for purchase in the future, but have no firm plans yet. If you'd be interested in buying one, please register your interest [here](https://forms.gle/11YPPzRYxNBGK4we7).`,

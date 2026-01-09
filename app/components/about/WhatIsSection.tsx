@@ -9,9 +9,10 @@ export default function WhatIsSection() {
           <strong>Screenie™</strong> is a smart timer that syncs with your family&apos;s screen time rules. Available as a parent app and a portable device for kids — no phone required.
         </p>
         
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-1 gap-12 items-center">
           {/* Phone Mockup */}
-          <div className="flex justify-center">
+          <img src="/Devices@390w.png" alt="Screenie Devices" className="mx-auto  " />
+          {/* <div className="flex justify-center">
             <div className="mockup-phone border-primary scale-75 sm:scale-100">
               <div className="camera"></div>
               <div className="display">
@@ -24,7 +25,7 @@ export default function WhatIsSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Description */}
           <div className="space-y-6">

@@ -11,8 +11,8 @@ export default function FinalCTASection() {
           Join families who&apos;ve found a better way to manage screen time — one built on trust, not conflict.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <CTAButton />
-          <CTAButton variant="outline" />
+          <CTAButton size="large" />
+          
         </div>
       </div>
     </section>

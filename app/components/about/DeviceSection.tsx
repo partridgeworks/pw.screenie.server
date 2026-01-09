@@ -9,7 +9,8 @@ export default function DeviceSection() {
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Device Visual */}
-          <div className="flex justify-center order-2 md:order-1">
+          <img src="/m5@360w.png" alt="Screenie Device" className="mx-auto" />
+          {/* <div className="flex justify-center order-2 md:order-1">
             <div className="relative">
               <div className="bg-linear-to-br from-primary/20 to-primary/5 rounded-3xl p-12">
                 <div className="bg-base-100 rounded-2xl shadow-2xl p-8 max-w-xs">
@@ -29,7 +30,7 @@ export default function DeviceSection() {
                 Physical Device
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Features */}
           <div className="space-y-8 order-1 md:order-2">
